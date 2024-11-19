@@ -1,0 +1,333 @@
+#!/usr/bin/env python
+
+# pylint: disable=missing-class-docstring,missing-function-docstring,line-too-long,redefined-outer-name,missing-module-docstring,protected-access
+
+from __future__ import annotations
+
+import argparse
+import sys
+
+from dataclasses import dataclass
+from typing import List, Tuple
+from enum import Enum
+
+import svgwrite  # type: ignore
+import trimesh
+
+PointType = float
+
+
+def log(message: str):
+    sys.stderr.write(f"{message}\n")
+
+
+@dataclass
+class Point:
+    x: PointType
+    y: PointType
+
+    def clone(self) -> Point:
+        return Point(self.x, self.y)
+
+    def move_east(self, amount: PointType) -> Point:
+        return Point(self.x + amount, self.y)
+
+    def move_west(self, amount: PointType) -> Point:
+        return Point(self.x - amount, self.y)
+
+    def move_north(self, amount: PointType) -> Point:
+        return Point(self.x, self.y - amount)
+
+    def move_south(self, amount: PointType) -> Point:
+        return Point(self.x, self.y + amount)
+
+
+class Flipping(Enum):
+    NO_FLIP = 1
+    FLIP_X = 2
+    FLIP_Y = 3
+    FLIP_XY = 4
+
+    def x(self) -> bool:
+        return self == Flipping.FLIP_X or self == Flipping.FLIP_XY
+
+    def y(self) -> bool:
+        return self == Flipping.FLIP_Y or self == Flipping.FLIP_XY
+
+
+class Drawer:
+    def __init__(self, start: Point, flipping=Flipping.NO_FLIP):
+        self.flipping = flipping
+        self.current = start.clone()
+        self.clear()
+
+    def clear(self):
+        self.points = [self.current.clone()]
+
+    def move_east(self, amount: PointType):
+        amount = -amount if self.flipping.x() else amount
+        self.current.x += amount
+        self.points.append(self.current.clone())
+
+    def move_west(self, amount: PointType):
+        amount = -amount if self.flipping.x() else amount
+        self.current.x -= amount
+        self.points.append(self.current.clone())
+
+    def move_north(self, amount: PointType):
+        amount = -amount if self.flipping.y() else amount
+        self.current.y -= amount
+        self.points.append(self.current.clone())
+
+    def move_south(self, amount: PointType):
+        amount = -amount if self.flipping.y() else amount
+        self.current.y += amount
+        self.points.append(self.current.clone())
+
+
+def draw_cell_border(
+    nw: Point, se: Point, thickness: PointType, gap_size: PointType
+) -> List[List[Point]]:
+    width = se.x - nw.x
+    height = se.y - nw.y
+
+    # WIP: make parameter
+    gap_start = 0.1 * width
+
+    # width = thickness + gap_start + gap_size + * + gap_size + gap_start + thickness
+
+    def draw_corner(point: Point, flipping: Flipping):
+        drawer = Drawer(point, flipping)
+        drawer.move_east(thickness + gap_start)
+        drawer.move_south(thickness)
+        drawer.move_west(gap_start)
+        drawer.move_south(gap_start)
+        drawer.move_west(thickness)
+        drawer.move_north(thickness + gap_start)
+        return drawer.points
+
+    def draw_horizontal_border(source: Point, width: PointType, flipping: Flipping):
+        drawer = Drawer(source, flipping)
+        drawer.move_east(thickness + gap_start + gap_size)
+        drawer.clear()
+        drawer.move_east(width - 2 * (thickness + gap_start + gap_size))
+        drawer.move_south(thickness)
+        drawer.move_west(width - 2 * (thickness + gap_start + gap_size))
+        drawer.move_north(thickness)
+        return drawer.points
+
+    def draw_vertical_border(source: Point, width: PointType, flipping: Flipping):
+        drawer = Drawer(source, flipping)
+        drawer.move_south(thickness + gap_start + gap_size)
+        drawer.clear()
+        drawer.move_south(width - 2 * (thickness + gap_start + gap_size))
+        drawer.move_east(thickness)
+        drawer.move_north(width - 2 * (thickness + gap_start + gap_size))
+        drawer.move_west(thickness)
+        return drawer.points
+
+    ne = nw.move_east(width)
+    sw = nw.move_south(height)
+
+    result = []
+    result.append(draw_corner(nw, Flipping.NO_FLIP))
+    result.append(draw_corner(ne, Flipping.FLIP_X))
+    result.append(draw_corner(se, Flipping.FLIP_XY))
+    result.append(draw_corner(sw, Flipping.FLIP_Y))
+    result.append(draw_horizontal_border(nw, width, Flipping.NO_FLIP))
+    result.append(draw_vertical_border(nw, height, Flipping.NO_FLIP))
+    result.append(draw_vertical_border(ne, height, Flipping.FLIP_X))
+    result.append(draw_horizontal_border(sw, width, Flipping.FLIP_Y))
+    return result
+
+
+def unpack(points: List[Point]) -> List[Tuple[PointType, PointType]]:
+    return [(point.x, point.y) for point in points]
+
+def unpack3(points: List[Point], z) -> List[Tuple[PointType, PointType, PointType]]:
+    return [(point.x, point.y, z) for point in points]
+
+
+def draw_polygons(drawing: svgwrite.Drawing, polygons: List[List[Point]], color: str):
+    for points in polygons:
+        drawing.add(drawing.polygon(unpack(points), fill=color))
+
+
+def compute(
+    row_index, column_index, gap_size, thickness, cell_width, cell_height
+) -> List[List[Point]]:
+    return draw_cell_border(
+        Point(cell_width * column_index, cell_height * row_index),
+        Point(cell_width * (column_index + 1), cell_height * (row_index + 1)),
+        thickness,
+        gap_size,
+    )
+
+
+def create_mesh(vertices: List[Point], z, height) -> trimesh.Trimesh:
+    translation_matrix = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, z], [0, 0, 0, 1]]
+    polygon_base = trimesh.path.polygons.paths_to_polygons([unpack(vertices)])[0]
+    result = trimesh.creation.extrude_polygon(polygon_base, height, translation_matrix)
+    result.units = "10 * m"
+    # result.units = "1 * cm"
+    result.convert_units("1 * m", False)
+    return result
+
+
+def draw_object(polygons: List[List[Point]], z, height):
+    return [create_mesh(polygon, z, height) for polygon in polygons]
+
+
+def export(scene, path: str):
+    scene.export(f"{path}.glb")
+    scene.export(f"{path}.stl")
+
+def main():
+    parser = argparse.ArgumentParser(description=".")
+    parser.add_argument("--export-svg", metavar="SVG", help="Export SVG.")
+    parser.add_argument("--export-glb", action="store_true", help="Export GLB.")
+    parser.add_argument("--rows", metavar="ROWS", default=4, help="Grid rows.")
+    parser.add_argument(
+        "--columns", metavar="COLUMNS", default=10, help="Grid columns."
+    )
+    parser.add_argument(
+        "--gap-size", metavar="GAP_SIZE", default=2 * 1.4286 / 10, help="Gap size."
+    )
+    parser.add_argument(
+        "--cell-width", metavar="CELL_WIDTH", default=1.4286, help="Cell width."
+    )
+    parser.add_argument(
+        "--cell-height", metavar="CELL_HEIGHT", default=3.1, help="Cell height."
+    )
+    parser.add_argument(
+        "--lower-height", metavar="LOWER_HEIGHT", default=0.3, help="Height of the lower part."
+    )
+    parser.add_argument(
+        "--upper-height", metavar="UPPER_HEIGHT", default=0.3, help="Height of the upper part."
+    )
+    args = parser.parse_args()
+
+    regular_thickness = 2 * 2.5 / 45
+    thinner_thickness = 2 * 1.5 / 45
+    lower_height = args.lower_height
+    upper_height = args.upper_height
+
+    plexiglass_width = args.cell_width * args.columns
+    plexiglass_height = args.cell_height * args.rows
+
+    if args.export_svg:
+        drawing = svgwrite.Drawing(args.export_svg, size=(plexiglass_width, plexiglass_height), profile="tiny")
+        drawing.add(drawing.polygon([(0, 0), (plexiglass_width, 0), (plexiglass_width, plexiglass_height), (0, plexiglass_height)], fill="blue"))
+
+    lower_meshes = []
+    upper_meshes = []
+    slack_meshes = []
+
+    log("Creating polygons")
+    for row_index in range(args.rows):
+        for column_index in range(args.columns):
+            lower = compute(
+                row_index,
+                column_index,
+                0,
+                regular_thickness,
+                args.cell_width,
+                args.cell_height,
+            )
+            upper = compute(
+                row_index,
+                column_index,
+                args.gap_size,
+                thinner_thickness,
+                args.cell_width,
+                args.cell_height,
+            )
+            slack = compute(
+                row_index,
+                column_index,
+                args.gap_size - 2 * (regular_thickness - thinner_thickness),
+                regular_thickness,
+                args.cell_width,
+                args.cell_height,
+            )
+
+            if args.export_svg:
+                #draw_polygons(drawing, lower, "yellow")
+                draw_polygons(drawing, slack, "red")
+                #draw_polygons(drawing, upper, "green")
+
+            if args.export_glb:
+                lower_meshes += draw_object(lower, 0, lower_height)
+                upper_meshes += draw_object(upper, lower_height, upper_height)
+                slack_meshes += draw_object(slack, lower_height, upper_height)
+
+    if args.export_glb:
+        log("Exporting grid")
+        scene = trimesh.Scene()
+        lower_mesh = trimesh.util.concatenate(lower_meshes)
+        lower_mesh.visual.face_colors = [255, 255, 0, 255]
+        scene.add_geometry(lower_mesh)
+
+        upper_mesh = trimesh.util.concatenate(upper_meshes)
+        upper_mesh.visual.face_colors = [0, 255, 0, 255]
+        scene.add_geometry(upper_mesh)
+
+        scene.apply_transform([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]])
+        #scene.apply_transform([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
+        export(scene, "grid")
+
+        log("Exporting plexiglass")
+        scene = trimesh.Scene()
+        plexiglass = trimesh.util.concatenate(
+            draw_object(
+                [
+                    [
+                        Point(0, 0),
+                        Point(0, plexiglass_height),
+                        Point(plexiglass_width, plexiglass_height),
+                        Point(plexiglass_width, 0),
+                    ]
+                ],
+                lower_height,
+                upper_height,
+            )
+        )
+
+        log("Computing difference")
+        for slack_mesh in slack_meshes:
+            slack_space = trimesh.util.concatenate(slack_mesh)
+            plexiglass = trimesh.boolean._engines["manifold"](
+                [plexiglass, slack_space], operation="difference", check_volume=False
+            )
+
+        plexiglass.visual.face_colors = [0, 0, 255, 10]
+        scene.add_geometry(plexiglass)
+        scene.apply_transform([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]])
+        export(scene, "plexiglass")
+
+    if args.export_svg:
+        log("Saving SVG")
+        drawing.save()
+
+        log("""Now:
+* Open inkscape
+* Select the blue background
+* Invert selection (!)
+* Path -> Union
+* Select the blue background
+* Copy (Ctrl + C)
+* Select the grid
+* Path -> Difference
+* Paste, center, send to background
+* Select all
+* Fill -> None
+* Stroke -> Yes
+* Stroke width -> Hairline
+* Select all
+* Path -> Combine
+* Flie -> Save as -> DXF
+        """)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
