@@ -15,3 +15,8 @@ The board has also
  - a digital temperature/humidity/pressure sensor
  - power good input signals from power supplies
  - voltage level shifter 3.3V -> 5V for LEDs data signals
+
+## ledian-2.0
+
+Full version of Ledian, panels composed by 480 LEDs arranged in a 12 rows and 40 columns that can be tiled to create a standard 80x24 terminal.
+Some changes were made to the configuration of signal input and 4 NTC were added to measure PCB's board temperature.
