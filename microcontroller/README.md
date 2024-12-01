@@ -8,4 +8,7 @@ Enter in the espressif sdk environment and then:
 
 ```
 idf.py build
+idf.py flash
+stty -F /dev/ttyACM0 115200
+screen /dev/ttyACM0 115200
 ```

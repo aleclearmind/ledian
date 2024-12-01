@@ -17,16 +17,15 @@
 
 #define RMT_LED_STRIP_RESOLUTION_HZ 10000000 // 10MHz resolution, 1 tick = 0.1us (led strip needs a high resolution)
 
-static const char *TAG = "example";
-
 void renderer_main(void *data)
 {
+    log("Starting renderer_main\n");
+
     rmt_encoder_handle_t led_encoder = NULL;
     led_strip_encoder_config_t encoder_config = {
         .resolution = RMT_LED_STRIP_RESOLUTION_HZ,
     };
     ESP_ERROR_CHECK(rmt_new_led_strip_encoder(&encoder_config, &led_encoder));
-
 
     while (1) {
 
@@ -36,7 +35,6 @@ void renderer_main(void *data)
             ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         }
 
-        ESP_LOGI(TAG, "Create RMT TX channel");
         rmt_channel_handle_t led_chan = NULL;
         rmt_tx_channel_config_t tx_chan_config = {
             .gpio_num = (gpio_num_t) 10,
@@ -47,10 +45,8 @@ void renderer_main(void *data)
         };
         ESP_ERROR_CHECK(rmt_new_tx_channel(&tx_chan_config, &led_chan));
 
-        ESP_LOGI(TAG, "Enable RMT TX channel");
         ESP_ERROR_CHECK(rmt_enable(led_chan));
 
-        ESP_LOGI(TAG, "Start LED rainbow chase");
         rmt_transmit_config_t tx_config = {
             .loop_count = 0, // no transfer loop
         };

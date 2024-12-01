@@ -51,23 +51,15 @@ extern "C" void app_main() {
 
   printBanner();
 
-  // Create tasks
-  TaskHandle_t RendererTask;
-
-  log("Creating tasks");
-  xTaskCreate(renderer_main, "renderer", 4096, NULL, 1, &RendererTask);
-  xTaskCreate(blinker_main, "blinker", 4096, NULL, 1, NULL);
-  xTaskCreate(command_parser_main, "command_parser", 4096, NULL, 1, NULL);
-
-  // Register the renderer task
-  LEDs.setRenderer(RendererTask);
-
   // Initialized LEDs
   auto &WorkingLEDs = LEDs.working();
 
-  for (unsigned Line = 0; Line < std::decay_t<decltype(WorkingLEDs)>::TheCoordinateSystem::lines(); ++Line)
-    for (unsigned Column = 0; Column < std::decay_t<decltype(WorkingLEDs)>::TheCoordinateSystem::columns(); ++Column)
-      WorkingLEDs.set(Column, Line, RGBColor(255, 0, 0), false);
+  using TheCoordinateSystem = std::decay_t<decltype(WorkingLEDs)>::TheCoordinateSystem;
+
+#if 0
+  for (unsigned Line = 0; Line < TheCoordinateSystem::lines(); ++Line)
+    for (unsigned Column = 0; Column < TheCoordinateSystem::columns(); ++Column)
+      WorkingLEDs.set(Column, Line, RGBColor(0, 255, 0), true);
 
   WorkingLEDs.set(0, 0, RGBColor(255, 0, 0), false);
   WorkingLEDs.set(0, 1, RGBColor(255, 0, 0), true);
@@ -82,12 +74,58 @@ extern "C" void app_main() {
   WorkingLEDs.set(0, 8, RGBColor(0, 0, 255), false);
 
   LEDs.commit();
+#endif
 
-  // renderer_main(nullptr);
+  // Create tasks
+  TaskHandle_t RendererTask;
 
-  // Start the scheduler
-  log("Starting the scheduler");
-  vTaskStartScheduler();
+  log("Creating tasks\n");
+  xTaskCreate(renderer_main, "renderer", 4096, NULL, 1, &RendererTask);
+
+  // Register the renderer task
+  LEDs.setRenderer(RendererTask);
+
+  xTaskCreate(blinker_main, "blinker", 4096 * 4, NULL, 1, NULL);
+  // xTaskCreate(command_parser_main, "command_parser", 4096, NULL, 1, NULL);
+
+  const TickType_t xDelay = 500 / portTICK_PERIOD_MS;
+  size_t CurrentRow = 0;
+  size_t CurrentColumn = 0;
+  size_t CurrentColor = 0;
+  std::array<RGBColor, 3> Colors = { RGBColor(254, 0, 0), RGBColor(0, 254, 0), RGBColor(0, 0, 254) };
+  RGBColor Off(0, 0, 0);
+
+  {
+    auto WorkingLEDs = LEDs.acquire();
+    WorkingLEDs->set(CurrentColumn, CurrentRow, Colors[CurrentColor], true);
+  }
+
+  while (1) {
+    log("Wait\n");
+    vTaskDelay(xDelay);
+
+    {
+      auto WorkingLEDs = LEDs.acquire();
+
+      WorkingLEDs->set(CurrentColumn, CurrentRow, Off, false);
+
+      ++CurrentColumn;
+      if (CurrentColumn % TheCoordinateSystem::columns() == 0) {
+        CurrentColumn = 0;
+        CurrentRow = (CurrentRow + 1) % TheCoordinateSystem::lines();
+      }
+
+      CurrentColor = (CurrentColor + 1) % Colors.size();
+
+      WorkingLEDs->set(CurrentColumn, CurrentRow, Colors[CurrentColor], true);
+    }
+
+
+    log("Wait\n");
+    vTaskDelay(xDelay);
+
+
+  }
 
 #if 0
   Trace M(event_ids::Main);

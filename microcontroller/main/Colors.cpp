@@ -1,5 +1,36 @@
 #include "Colors.h"
 
+HSVColor RGBColor::toHSVColor() const {
+  HSVColor Result;
+
+  uint8_t rgbMin =
+      Red < Green ? (Red < Blue ? Red : Blue) : (Green < Blue ? Green : Blue);
+  uint8_t rgbMax =
+      Red > Green ? (Red > Blue ? Red : Blue) : (Green > Blue ? Green : Blue);
+
+  Result.Value = rgbMax;
+  if (Result.Value == 0) {
+    Result.Hue = 0;
+    Result.Saturation = 0;
+    return Result;
+  }
+
+  Result.Saturation = 255 * ((long)(rgbMax - rgbMin)) / Result.Value;
+  if (Result.Saturation == 0) {
+    Result.Hue = 0;
+    return Result;
+  }
+
+  if (rgbMax == Red)
+    Result.Hue = 0 + 43 * (Green - Blue) / (rgbMax - rgbMin);
+  else if (rgbMax == Green)
+    Result.Hue = 85 + 43 * (Blue - Red) / (rgbMax - rgbMin);
+  else
+    Result.Hue = 171 + 43 * (Red - Green) / (rgbMax - rgbMin);
+
+  return Result;
+}
+
 RGBColor HSVColor::toRGBColor() const {
   RGBColor Result;
 
@@ -58,33 +89,5 @@ RGBColor HSVColor::toRGBColor() const {
   return Result;
 }
 
-HSVColor RGBColor::toHSVColor() const {
-  HSVColor Result;
-
-  uint8_t rgbMin =
-      Red < Green ? (Red < Blue ? Red : Blue) : (Green < Blue ? Green : Blue);
-  uint8_t rgbMax =
-      Red > Green ? (Red > Blue ? Red : Blue) : (Green > Blue ? Green : Blue);
-
-  Result.Value = rgbMax;
-  if (Result.Value == 0) {
-    Result.Hue = 0;
-    Result.Saturation = 0;
-    return Result;
-  }
-
-  Result.Saturation = 255 * ((long)(rgbMax - rgbMin)) / Result.Value;
-  if (Result.Saturation == 0) {
-    Result.Hue = 0;
-    return Result;
-  }
-
-  if (rgbMax == Red)
-    Result.Hue = 0 + 43 * (Green - Blue) / (rgbMax - rgbMin);
-  else if (rgbMax == Green)
-    Result.Hue = 85 + 43 * (Blue - Red) / (rgbMax - rgbMin);
-  else
-    Result.Hue = 171 + 43 * (Red - Green) / (rgbMax - rgbMin);
-
-  return Result;
-}
+static_assert(sizeof(RGBColor) == 3);
+static_assert(RGBColor(255, 0, 0).Red == 255);

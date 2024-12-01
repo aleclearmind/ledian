@@ -7,7 +7,6 @@
 void command_parser_main(void *) {
   while (true) {
     if (Command::parse()) {
-        LEDs.commit();
     }
   }
 }

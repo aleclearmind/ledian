@@ -112,6 +112,13 @@ public:
 
 public:
   // TODO: hardcoded and redundants
+#if 1
+  using TheCoordinateSystem =
+      CoordinateSystem<2, 1,
+                       std::array<Panel, 2>{Panel{Corner::NorthWest, 0},
+                                            Panel{Corner::NorthEast, 1}},
+                       10, 4>;
+#else
   using TheCoordinateSystem =
       CoordinateSystem<4, 2,
                        std::array<Panel, 4>{Panel{Corner::NorthWest, 0},
@@ -119,6 +126,7 @@ public:
                                             Panel{Corner::SouthWest, 2},
                                             Panel{Corner::SouthEast, 3}},
                        40, 11>;
+#endif
 
 public:
   LEDArray() : ActualSize(MaxSize) {
@@ -146,9 +154,12 @@ public:
 public:
   void set(size_t Column, size_t Line, const RGBColor &Color, bool Blink) {
     LEDRef LED = led(Column, Line);
+
+#if 0
     log("LEDArray.set(Column: %d, Line: %d, Color: ", Column, Line);
     Color.dump(false, Blink);
     log(", StripIndex: %d, LED index: %d)\n", LED.Strip.Index, LED.Index);
+#endif
 
     LED.color() = Color;
 
@@ -181,9 +192,9 @@ public:
     } else {
       Trace TT(event_ids::RenderStrip, J);
 
-      Trace TTT(event_ids::AdjustBlinking);
       for (size_t I = 0; I < ActualSize; ++I) {
-        HSVColor Color = Strips[J].LEDs[I].toHSVColor();
+        RGBColor &TargetColor = Strips[J].LEDs[I];
+        HSVColor Color = TargetColor.toHSVColor();
 
         if (Strips[J].blinks(I)) {
           constexpr uint8_t MinValue = 0;
@@ -196,33 +207,8 @@ public:
           Color.Value = ValueShift;
         }
 
-        Strips[J].LEDs[I] = Color.toRGBColor();
+        TargetColor = Color.toRGBColor();
       }
-      TTT.stop();
-
-      Trace TFlush(event_ids::FlushBuffer);
-      ArrayRef<const uint8_t> Buffer{
-          reinterpret_cast<const uint8_t *>(&Strips[J].LEDs[0]),
-          ActualSize * sizeof(RGBColor)};
-      if (J == 0) {
-        WS2812Pin<0, 0>::setOutput();
-        WS2812Pin<0, 0>::writeBuffer(Buffer);
-        WS2812Pin<0, 0>::setInput();
-      } else if (J == 1) {
-        WS2812Pin<1, 1>::setOutput();
-        WS2812Pin<1, 1>::writeBuffer(Buffer);
-        WS2812Pin<1, 1>::setInput();
-      } else if (J == 2) {
-        WS2812Pin<2, 2>::setOutput();
-        WS2812Pin<2, 2>::writeBuffer(Buffer);
-        WS2812Pin<2, 2>::setInput();
-      } else if (J == 3) {
-        WS2812Pin<3, 5>::setOutput();
-        WS2812Pin<3, 5>::writeBuffer(Buffer);
-        WS2812Pin<3, 5>::setInput();
-      }
-
-      TFlush.stop();
 
       TT.stop();
 

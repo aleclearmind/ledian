@@ -44,19 +44,19 @@
       grid = pkgs.mkShell {
         buildInputs = [
           pkgs.blender
-          pkgs.python312
-          pkgs.python312Packages.mapbox-earcut
-          pkgs.python312Packages.manifold3d
-          pkgs.python312Packages.black
-          pkgs.python312Packages.trimesh
-          pkgs.python312Packages.pyglet
-          pkgs.python312Packages.ipython
-          pkgs.python312Packages.scipy
-          pkgs.python312Packages.shapely
-          pkgs.python312Packages.mypy
-          pkgs.python312Packages.ezdxf
-          pkgs.python312Packages.svgwrite
-          pkgs.python312Packages.numpy
+          pkgs.python311
+          pkgs.python311Packages.mapbox-earcut
+          pkgs.python311Packages.manifold3d
+          pkgs.python311Packages.black
+          pkgs.python311Packages.trimesh
+          pkgs.python311Packages.pyglet
+          pkgs.python311Packages.ipython
+          pkgs.python311Packages.scipy
+          pkgs.python311Packages.shapely
+          pkgs.python311Packages.mypy
+          pkgs.python311Packages.ezdxf
+          pkgs.python311Packages.svgwrite
+          pkgs.python311Packages.numpy
         ];
       };
     in

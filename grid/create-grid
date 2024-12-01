@@ -108,11 +108,12 @@ def draw_cell_border(
 
     def draw_horizontal_border(source: Point, width: PointType, flipping: Flipping):
         drawer = Drawer(source, flipping)
-        drawer.move_east(thickness + gap_start + gap_size)
+        gap_size2 = gap_size / 2
+        drawer.move_east(thickness + gap_start + gap_size2)
         drawer.clear()
-        drawer.move_east(width - 2 * (thickness + gap_start + gap_size))
+        drawer.move_east(width - 2 * (thickness + gap_start + gap_size2))
         drawer.move_south(thickness)
-        drawer.move_west(width - 2 * (thickness + gap_start + gap_size))
+        drawer.move_west(width - 2 * (thickness + gap_start + gap_size2))
         drawer.move_north(thickness)
         return drawer.points
 
@@ -150,7 +151,9 @@ def unpack3(points: List[Point], z) -> List[Tuple[PointType, PointType, PointTyp
 
 def draw_polygons(drawing: svgwrite.Drawing, polygons: List[List[Point]], color: str):
     for points in polygons:
-        drawing.add(drawing.polygon(unpack(points), fill=color))
+        polygon = drawing.polygon(unpack(points), fill=color)
+        polygon.scale(1 / 0.026458, 1 / 0.026458)
+        drawing.add(polygon)
 
 
 def compute(
@@ -186,29 +189,30 @@ def main():
     parser = argparse.ArgumentParser(description=".")
     parser.add_argument("--export-svg", metavar="SVG", help="Export SVG.")
     parser.add_argument("--export-glb", action="store_true", help="Export GLB.")
-    parser.add_argument("--rows", metavar="ROWS", default=4, help="Grid rows.")
+    parser.add_argument("--rows", metavar="ROWS", default=12, help="Grid rows.")
     parser.add_argument(
-        "--columns", metavar="COLUMNS", default=10, help="Grid columns."
+        "--columns", metavar="COLUMNS", default=40, help="Grid columns."
     )
     parser.add_argument(
-        "--gap-size", metavar="GAP_SIZE", default=2 * 1.4286 / 10, help="Gap size."
+        "--gap-size", metavar="GAP_SIZE", default=2 * 1.25 / 10, help="Gap size."
     )
     parser.add_argument(
-        "--cell-width", metavar="CELL_WIDTH", default=1.4286, help="Cell width."
+        "--cell-width", metavar="CELL_WIDTH", default=1.25, help="Cell width."
     )
     parser.add_argument(
-        "--cell-height", metavar="CELL_HEIGHT", default=3.1, help="Cell height."
+        "--cell-height", metavar="CELL_HEIGHT", default=2.70831, help="Cell height."
     )
     parser.add_argument(
-        "--lower-height", metavar="LOWER_HEIGHT", default=0.3, help="Height of the lower part."
+        "--lower-height", metavar="LOWER_HEIGHT", default=2 - 0.3, help="Height of the lower part."
     )
     parser.add_argument(
         "--upper-height", metavar="UPPER_HEIGHT", default=0.3, help="Height of the upper part."
     )
     args = parser.parse_args()
 
-    regular_thickness = 2 * 2.5 / 45
-    thinner_thickness = 2 * 1.5 / 45
+    thickness_scale = 0.8
+    regular_thickness = (2 * 2.5 / 45) * thickness_scale
+    thinner_thickness = (2 * 1.5 / 45) * thickness_scale
     lower_height = args.lower_height
     upper_height = args.upper_height
 
@@ -216,8 +220,10 @@ def main():
     plexiglass_height = args.cell_height * args.rows
 
     if args.export_svg:
-        drawing = svgwrite.Drawing(args.export_svg, size=(plexiglass_width, plexiglass_height), profile="tiny")
-        drawing.add(drawing.polygon([(0, 0), (plexiglass_width, 0), (plexiglass_width, plexiglass_height), (0, plexiglass_height)], fill="blue"))
+        drawing = svgwrite.Drawing(args.export_svg, size=(f"{plexiglass_width}cm", f"{plexiglass_height}cm"), profile="tiny")
+        background = drawing.polygon([(0, 0), (plexiglass_width, 0), (plexiglass_width, plexiglass_height), (0, plexiglass_height)], fill="blue")
+        background.scale(1 / 0.026458, 1 / 0.026458)
+        drawing.add(background)
 
     lower_meshes = []
     upper_meshes = []
@@ -266,11 +272,65 @@ def main():
         scene = trimesh.Scene()
         lower_mesh = trimesh.util.concatenate(lower_meshes)
         lower_mesh.visual.face_colors = [255, 255, 0, 255]
-        scene.add_geometry(lower_mesh)
 
         upper_mesh = trimesh.util.concatenate(upper_meshes)
         upper_mesh.visual.face_colors = [0, 255, 0, 255]
         scene.add_geometry(upper_mesh)
+
+        def create_hole(y_translate, x_translate):
+            import numpy as np
+
+            hole_base = 1 / 2
+            hole_height = 0.5 / 2
+            # hole_base = 1
+            # hole_height = 1
+            point_count = 15
+
+            points = [
+                Point(
+                    round(hole_base / 2 + np.cos(radiants) * (hole_base / 2), 8),
+                    round(np.sin(radiants) * hole_height, 8)
+                )
+                for radiants
+                in [
+                    index * np.pi / point_count
+                    for index
+                    in range(point_count + 1)
+                ]
+            ]
+
+            # import json
+            # print(json.dumps(, indent=2))
+            # sys.exit(1)
+
+            cut = draw_object([
+                [
+                    Point(0., 0.),
+                    # Point(hole_base, 0.),
+                    # Point(hole_base / 2, hole_height),
+                    # Point(0., 0.)
+                ] + points
+            ], 0, 0.25)
+
+            cut[0].apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [1, 0, 0]))
+            cut[0].apply_transform(trimesh.transformations.rotation_matrix(np.pi / 2, [0, 0, 1]))
+            cut[0].apply_transform(trimesh.transformations.translation_matrix([-0.5 + x_translate, y_translate, -0.1]))
+            return cut[0]
+
+        height = 10 * args.cell_height
+        holes = []
+        for row_index in range(args.rows):
+            lower_y_translate = height * row_index + (height / 6 - 2.5)
+            higher_y_translate = height * row_index + (5 * height / 6 - 2.5)
+            holes.append(create_hole(lower_y_translate, 0))
+            holes.append(create_hole(higher_y_translate, 0))
+            holes.append(create_hole(lower_y_translate, plexiglass_width * 10 - 2.5 / 2))
+            holes.append(create_hole(higher_y_translate, plexiglass_width * 10 - 2.5 / 2))
+        hole = trimesh.util.concatenate(holes)
+        lower_mesh = trimesh.boolean._engines["manifold"](
+            [lower_mesh, hole], operation="difference", check_volume=False
+        )
+        scene.add_geometry(lower_mesh)
 
         scene.apply_transform([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]])
         #scene.apply_transform([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
@@ -325,7 +385,9 @@ def main():
 * Stroke width -> Hairline
 * Select all
 * Path -> Combine
-* Flie -> Save as -> DXF
+* File -> Save as -> DXF
+* As unit choose "mm"
+* Verify on sendcutsend.com
         """)
 
 
