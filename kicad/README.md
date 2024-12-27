@@ -20,3 +20,9 @@ The board has also
 
 Full version of Ledian, panels composed by 480 LEDs arranged in a 12 rows and 40 columns that can be tiled to create a standard 80x24 terminal.
 Some changes were made to the configuration of signal input and 4 NTC were added to measure PCB's board temperature.
+
+## ledian-LED-PCB-placer
+
+KiCad's plugin that does the majority of the PCB routing for Ledian board with all the LEDs. The plugin procedurally created the
+PCB, places all the componentes, routes all the traces and creates filled zones for ground and power supply.
+The configurability is limited and very specific to Ledian but it already allows to change number of LEDs, spacing, position/width of traces and other parameters.
