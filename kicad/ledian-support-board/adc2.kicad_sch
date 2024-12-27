@@ -887,9 +887,15 @@
     (uuid ffd08c1c-f38a-47a5-8149-75327b0b714f)
   )
 
-  (text "Photoresistor to measure light for dimming" (at 175.26 149.86 0)
+  (text "Each input has connected a current sensor ACS71240."
+    (at 179.07 52.07 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 4d9527e9-7004-4bc9-a6be-a8b7b7a8acb7)
+    (uuid c7400932-de7f-4dbc-8fb3-731ee9e900e0)
+  )
+  (text "PHOTORESIST_0 and 1 have connected a LDR of 2k at 10 lux.\nNTC_PSU_0 and 1 have connected to an NTC of 4.7k"
+    (at 170.18 144.78 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid ed442ede-37d9-4547-bf9f-e9baadba5580)
   )
 
   (global_label "CUR_PANEL_2" (shape input) (at 218.44 63.5 0) (fields_autoplaced)

@@ -702,6 +702,17 @@
     (uuid fceec038-76b7-49ff-a4bf-aa5d5afe96b0)
   )
 
+  (text "Powering the board from this 5V pin works but disables the internal USB hub\nwhich is useful for programming without additional external hardware.\nBecause of this limitation the ESP board is powered through the USB-C port."
+    (at 73.66 140.97 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 8a7d6418-3bd1-49e7-86a5-04763bda19c1)
+  )
+  (text "I2C header to allow additional devices to be connected to the board."
+    (at 191.77 29.21 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid aca1e6e6-005d-4701-8e95-d6a951ea4e7a)
+  )
+
   (global_label "I2C_SCK" (shape input) (at 217.17 49.53 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right))
     (uuid 396a527e-a9a0-4ab8-8520-25a9eeffa25f)

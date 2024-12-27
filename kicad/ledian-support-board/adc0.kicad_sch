@@ -951,6 +951,15 @@
     (uuid fd25d90f-e04f-4a8b-9c33-1314897d907f)
   )
 
+  (text "Each input has connected an NTC of 4.7k." (at 184.15 144.78 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 34891d30-bde4-4d38-8d79-9021c4b65333)
+  )
+  (text "Each input has connected an NTC of 4.7k." (at 184.15 88.9 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid 4fe672c0-2a4a-4cb5-8fd7-6d3ce7b34ed4)
+  )
+
   (global_label "NTC_0_PANEL_1" (shape input) (at 91.44 71.12 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left))
     (uuid 118de5f3-3add-4f13-b5b0-c6e7c98d2ff3)
