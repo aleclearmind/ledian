@@ -4,6 +4,10 @@
 
   (paper "A4")
 
+  (title_block
+    (title "ADC2")
+  )
+
   (lib_symbols
     (symbol "Analog_ADC:MCP3208" (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
       (property "Reference" "U" (at -5.08 13.335 0)
