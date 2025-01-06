@@ -1,11 +1,16 @@
 {
   inputs.nixpkgs.url = "nixpkgs";
+  inputs.flake-utils.url = "github:numtide/flake-utils";
 
   outputs =
-    { self, nixpkgs }:
+    { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = import nixpkgs { system = "x86_64-linux"; };
-      libvterm = pkgs.stdenv.mkDerivation {
+      pkgs = import nixpkgs { system = system; };
+    in
+    rec {
+      formatter = pkgs.nixfmt-rfc-style;
+      packages.libvterm = pkgs.stdenv.mkDerivation {
         pname = "libvterm";
         version = "0.1.0";
         src = pkgs.fetchbzr {
@@ -23,7 +28,7 @@
         buildPhase = "make";
         installFlags = [ "PREFIX=$(out)" ];
       };
-      pangoterm = pkgs.stdenv.mkDerivation {
+      packages.pangoterm = pkgs.stdenv.mkDerivation {
         pname = "pangoterm";
         version = "0.1.0";
         src = ./.;
@@ -35,13 +40,13 @@
           pkgs.pkg-config
           pkgs.cairo
           pkgs.gtk2
-          libvterm
+          packages.libvterm
         ];
 
         buildPhase = "make";
         installFlags = [ "PREFIX=$(out)" ];
       };
-      grid = pkgs.mkShell {
+      packages.grid = pkgs.mkShell {
         buildInputs = [
           pkgs.blender
           pkgs.python311
@@ -59,11 +64,5 @@
           pkgs.python311Packages.numpy
         ];
       };
-    in
-    {
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
-      packages.x86_64-linux.libvterm = libvterm;
-      packages.x86_64-linux.pangoterm = pangoterm;
-      packages.x86_64-linux.grid = grid;
-    };
+    });
 }

@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  */
+#include <mutex>
 #include <string.h>
 #include "driver/rmt_common.h"
-#define __GLIBC_USE
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
@@ -53,12 +53,18 @@ void renderer_main(void *data)
 
         // Flush RGB values to LEDs
         // WIP: use all strips
-        ESP_ERROR_CHECK(rmt_transmit(led_chan,
-                                     led_encoder,
-                                     &LEDs.render().Strips[0].LEDs,
-                                     LEDs.render().Strips[0].size(),
-                                     &tx_config));
-        ESP_ERROR_CHECK(rmt_tx_wait_all_done(led_chan, portMAX_DELAY));
+        {
+          std::lock_guard<std::mutex> AcquireLock(LEDs.Lock);
+          log("Send\n");
+          LEDs.render().dump(true);
+          ESP_ERROR_CHECK(rmt_transmit(led_chan,
+                                       led_encoder,
+                                       &LEDs.render().Strips[0].LEDs,
+                                       LEDs.render().Strips[0].size(),
+                                       &tx_config));
+          ESP_ERROR_CHECK(rmt_tx_wait_all_done(led_chan, portMAX_DELAY));
+          LEDs.setRendered();
+        }
 
         // Cleanup
         ESP_ERROR_CHECK(rmt_disable(led_chan));

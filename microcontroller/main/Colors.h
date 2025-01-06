@@ -22,14 +22,14 @@ public:
 
 class RGBColor {
 public:
-  uint8_t Red;
   uint8_t Green;
+  uint8_t Red;
   uint8_t Blue;
 
 public:
-  constexpr RGBColor() : Red(), Green(0), Blue(0) {}
+  constexpr RGBColor() : Green(0), Red(), Blue(0) {}
   constexpr RGBColor(uint8_t Red, uint8_t Green, uint8_t Blue)
-      : Red(Red), Green(Green), Blue(Blue) {}
+      : Green(Green), Red(Red), Blue(Blue) {}
 
   bool operator==(const RGBColor &) const = default;
 

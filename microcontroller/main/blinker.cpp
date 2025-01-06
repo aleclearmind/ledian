@@ -14,9 +14,12 @@ void blinker_main(void *) {
         // Wait for the next iteration
         vTaskDelayUntil(&LastWakeTime, BlinkUpdateTicks);
 
+        if (LEDs.working().blinks()) {
+
         auto WorkingLEDs = LEDs.acquire();
 
         // Update Value
         WorkingLEDs->render(xTaskGetTickCount() / BlinkUpdateTicks);
+        }
     }
 }

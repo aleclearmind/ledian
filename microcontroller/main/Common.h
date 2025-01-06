@@ -5,11 +5,12 @@
 
 #include "LED.h"
 
+#define HIGHSPEED
+
 class LEDBuffers;
 
-static constexpr size_t MaxLEDs = 11 * 40;
+static constexpr size_t MaxLEDs = 24 * 80;
 static constexpr size_t MaxPorts = 4;
-using ConfiguredLEDArray = LEDArray<MaxLEDs, MaxPorts>;
 
 class WriteLock {
 private:
@@ -21,8 +22,8 @@ public:
   ~WriteLock();
 
 public:
-  ConfiguredLEDArray &operator*();
-  ConfiguredLEDArray *operator->();
+  LEDArray &operator*();
+  LEDArray *operator->();
 };
 
 
@@ -30,11 +31,13 @@ class LEDBuffers {
   friend class WriteLock;
 
 private:
-  std::array<ConfiguredLEDArray, 2> LEDBuffers;
-  ConfiguredLEDArray *RenderBuffer = &LEDBuffers[0];
-  ConfiguredLEDArray *WorkingBuffer = &LEDBuffers[1];
+  std::array<LEDArray, 2> LEDBuffers;
+  LEDArray *RenderBuffer = &LEDBuffers[0];
+  LEDArray *WorkingBuffer = &LEDBuffers[1];
   bool Rendered = false;
   TaskHandle_t RendererTask;
+
+public:
   std::mutex Lock;
 
 private:
@@ -55,18 +58,19 @@ public:
   bool shouldRender() const { return not Rendered; }
 
 public:
-  ConfiguredLEDArray &working() { return *WorkingBuffer; }
-  const ConfiguredLEDArray &render() { return *RenderBuffer; }
+  LEDArray &working() { return *WorkingBuffer; }
+  const LEDArray &render() { return *RenderBuffer; }
 
 };
 
 inline WriteLock::WriteLock(LEDBuffers &LEDs) : LEDs(LEDs), Lock(LEDs.Lock) {}
 inline WriteLock::~WriteLock() { LEDs.commit(); }
-inline ConfiguredLEDArray &WriteLock::operator*() { return LEDs.working(); }
-inline ConfiguredLEDArray *WriteLock::operator->() { return &LEDs.working(); }
+inline LEDArray &WriteLock::operator*() { return LEDs.working(); }
+inline LEDArray *WriteLock::operator->() { return &LEDs.working(); }
 
 inline LEDBuffers LEDs;
 
 void renderer_main(void *);
+void renderer_main2(void *);
 void blinker_main(void *);
 void command_parser_main(void *);

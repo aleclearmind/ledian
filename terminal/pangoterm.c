@@ -1161,7 +1161,7 @@ static int term_damage(VTermRect rect, void *user_data)
 {
   PangoTerm *pt = user_data;
 
-  ledian_term_damage(rect, pt);
+  ledian_term_damage(pt, rect);
 
   if(pt->highlight_valid) {
     if((pt->highlight_start.row < rect.end_row - 1 ||
@@ -1317,6 +1317,8 @@ static int term_moverect(VTermRect dest, VTermRect src, void *user_data)
 static int term_movecursor(VTermPos pos, VTermPos oldpos, int visible, void *user_data)
 {
   PangoTerm *pt = user_data;
+
+  ledian_term_movecursor(pt, pos);
 
   pt->cursorpos = pos;
   if(visible &&

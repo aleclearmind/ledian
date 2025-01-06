@@ -35,12 +35,14 @@
 
 #include "conf.h"
 
+CONF_BOOL(stream, 0, FALSE, "Read stream of bitmaps from stdin");
+
 CONF_STRING(font, 0,   "DejaVu Sans Mono", "Font name", "STR");
 
 CONF_STRING(title, 'T', "pangoterm", "Title", "STR");
 
-CONF_INT(lines, 0, 24, "Number of lines",   "NUM");
 CONF_INT(cols,  0, 80, "Number of columns", "NUM");
+CONF_INT(lines, 0, 24, "Number of lines",   "NUM");
 
 CONF_STRING(term, 0, "xterm", "Terminal type", "STR");
 
@@ -136,10 +138,19 @@ int main(int argc, char *argv[])
     argc--;
   }
 
+  
+
   gtk_init(&argc, &argv);
   setlocale(LC_CTYPE, NULL);
 
   PangoTerm *pt = pangoterm_new(CONF_lines, CONF_cols);
+
+  if (CONF_stream) {
+    ledian_pangoterm_start(pt);
+    ledian_stream();
+    ledian_pangoterm_free(pt);
+    return;
+  }
 
   pangoterm_set_fonts(pt, CONF_font, alt_fonts);
 

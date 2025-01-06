@@ -8,5 +8,6 @@ idf_component_register(
     renderer.cpp
     led_strip_encoder.c
     command_parser.cpp
+    spi.cpp
     INCLUDE_DIRS ".")
 #    command_parser.include(CPackProductBuild)

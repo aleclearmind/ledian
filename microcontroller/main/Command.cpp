@@ -1,6 +1,12 @@
 #include "Common.h"
 
 #include "Command.h"
+#include <cstdio>
+#include <cinttypes>
+#include <stdio.h>
+
+#include "driver/uart.h"
+#include "LED.h"
 
 namespace Command {
 
@@ -8,18 +14,23 @@ struct cursor_t {
   uint32_t Column;
   uint32_t Line;
 
-  void operator++() { ++Column; }
+  void operator++() { *this = *this + 1; }
 
   cursor_t operator+(size_t Columns) const {
     cursor_t Result = *this;
     Result.Column += Columns;
-    assert(Result.verify());
+
+    while (Result.Column >= TheCoordinateSystem::columns()) {
+      Result.Column -= TheCoordinateSystem::columns();
+      Result.Line += 1;
+    }
+
+    // assert(Result.verify());
     return Result;
   }
 
   bool verify() const {
-    // TODO: fix
-    return Column < 80 and Line < 22;
+    return Column < 80 and Line < 24;
   }
 };
 
@@ -62,7 +73,7 @@ public:
 
 private:
   Context &C;
-  cursor_t LocalWriteCursor;
+  cursor_t &LocalWriteCursor;
 
 public:
   UpdateRange(Context &C) : C(C), LocalWriteCursor(C.WriteCursor) {
@@ -77,10 +88,13 @@ public:
 
   void parseOne(const LEDDescriptor *Object) {
     assert(Object->verify());
-    LEDs.working().set(LocalWriteCursor.Column, LocalWriteCursor.Line,
-                       Object->Color.toRGBColor(), Object->Blink);
+    auto LEDArray = LEDs.acquire();
+    LEDArray->set(LocalWriteCursor.Column, LocalWriteCursor.Line,
+                  Object->color(), Object->blinks());
     ++LocalWriteCursor;
   }
+
+  void postparse() {}
 };
 
 class MoveCursor {
@@ -132,6 +146,43 @@ public:
   }
 };
 
+class CRC32 {
+public:
+  static constexpr const char *Name = "CRC32";
+  static constexpr char ID = 5;
+  static constexpr BufferType Type = BufferType::Array;
+  using ArrayType = unsigned char;
+
+private:
+  uint32_t Result = 0xFFFFFFFF;
+
+public:
+  CRC32(Context &) {}
+
+  void preparse(size_t Elements) {}
+
+  void parseOne(const unsigned char *Object) {
+    Result = Result ^ (uint32_t) *Object;
+    for (int j = 7; j >= 0; j--) {
+        Result = (Result >> 1) ^ (0xEDB88320 & (-(Result & 1)));
+    }
+  }
+
+  void postparse() {
+    Result = ~Result;
+
+#ifdef HIGHSPEED
+    char Buffer[400];
+    int Length = sniprintf(&Buffer[0], 400, "CRC32: %" PRIu32 "\n", Result);
+    uart_write_bytes((uart_port_t) 0, (const char *) &Buffer, Length);
+#else
+    iprintf("CRC32: %" PRIu32 "\n", Result);
+    fflush(stdout);
+#endif
+  }
+
+};
+
 Context C;
 using identifier_t = uint8_t;
 using length_t = uint32_t;
@@ -170,6 +221,8 @@ template <typename T> void parseArray(length_t Length) {
     Trace TTT(event_ids::ParseOne, I);
     Instance.parseOne(read<typename T::ArrayType>());
   }
+
+  Instance.postparse();
 }
 
 template <typename T> void dispatch(length_t Length) {
@@ -191,14 +244,18 @@ std::optional<ArrayRef<uint8_t>> read(size_t Size) {
   size_t ReadData = 0;
   uint8_t *ReadPointer = &ReadBuffer[0];
 
+  log("Reading %d bytes\n", Size);
+
   while (ReadData < Size) {
-    ReadData += fread(ReadPointer, 1, Size, stdin);
-    ReadPointer += ReadData;
+#ifdef HIGHSPEED
+    ReadData += uart_read_bytes((uart_port_t) 0, ReadPointer, Size - ReadData, 20 / portTICK_PERIOD_MS);
+#else
+    ReadData += fread(ReadPointer, 1, Size - ReadData, stdin);
+#endif
+    ReadPointer = ReadBuffer + ReadData;
   }
 
-  log("ReadData: %d\n", ReadData);
-  fflush(stdout);
-
+  log("ReadData: %d (expected %d)\n", ReadData, Size);
 
 #if 0
   static size_t UnackedBytes = 0;
@@ -212,7 +269,7 @@ std::optional<ArrayRef<uint8_t>> read(size_t Size) {
   for (size_t I = 0; I < ReadData; ++I) {
     log("%.2x ", ReadBuffer[I]);
   }
-  puts("\n");
+  log("\n");
 
   assert(ReadData == Size);
 
@@ -228,11 +285,12 @@ bool hasData() {
 bool parse() {
   Trace T(event_ids::Parse);
 
+  log("Waiting for message\n");
   identifier_t *MaybeIDPointer = read<identifier_t>();
   if (MaybeIDPointer != nullptr) {
     identifier_t ID = *MaybeIDPointer;
     length_t Length = *read<length_t>();
-    log("ID: %d length: %ld\n", ID, Length);
+    log("Parsing message. ID: %d length: %ld\n", ID, Length);
 
     switch (ID) {
     case Helo::ID:
@@ -249,12 +307,29 @@ bool parse() {
       log("MoveCursor\n");
       dispatch<MoveCursor>(Length);
       break;
+
+    case Configure::ID:
+      log("Configure\n");
+      dispatch<Configure>(Length);
+      break;
+
+    case CRC32::ID:
+      log("CRC32\n");
+      dispatch<CRC32>(Length);
+      break;
+
     default:
-      log("default\n");
+      abort();
       break;
     }
 
+
+#ifdef HIGHSPEED
+    uart_write_bytes((uart_port_t) 0, (const char *) "ACK\n", 4);
+#else
     puts("ACK");
+#endif
+    fflush(stdout);
     return true;
   }
 

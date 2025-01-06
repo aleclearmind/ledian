@@ -1,37 +1,23 @@
 #pragma once
 
+#include <limits>
+
 #include "ArrayRef.h"
 #include "Colors.h"
 #include "CoordinateSystem.h"
 #include "Logging.h"
 
-template <size_t Gpio, size_t Index> struct WS2812Pin {
-
-  static void setOutput() {
-    // TODO
-  }
-
-  static void setInput() {
-    // TODO
-  }
-
-  static void writeBuffer(ArrayRef<const uint8_t> Buffer) {
-    // TODO
-  }
-};
-
 class LEDDescriptor {
-public:
-  HSVColor Color;
-  uint8_t Blink;
+private:
+  uint8_t Red = 0;
+  uint8_t Green = 0;
+  uint8_t Blue = 0;
+  // WIP: remove blink
+  uint8_t Blink = 0;
 
 public:
-  LEDDescriptor() : Color(), Blink(0) {}
-  LEDDescriptor(HSVColor Color) : Color(Color), Blink(0) {}
-  LEDDescriptor(RGBColor Color) : Color(Color.toHSVColor()), Blink(0) {}
-  LEDDescriptor(HSVColor Color, uint8_t Blink) : Color(Color), Blink(Blink) {}
-  LEDDescriptor(RGBColor Color, uint8_t Blink)
-      : Color(Color.toHSVColor()), Blink(Blink) {}
+  RGBColor color() const { return RGBColor(Red, Green, Blue); }
+  bool blinks() const { return Blink != 0; }
 
 public:
   bool verify() const { return Blink < 2; }
@@ -40,38 +26,87 @@ public:
 static_assert(sizeof(HSVColor) == 3);
 static_assert(sizeof(LEDDescriptor) == 4);
 
-template <size_t MaxSize>
-struct Strip {
+template <size_t StripSize>
+class Strip {
 public:
-  coordinate_t Index = 0;
-  std::array<RGBColor, MaxSize> LEDs;
-  std::array<uint8_t, (MaxSize + 7) / 8> Blink;
+  static constexpr auto NoBlinking = std::numeric_limits<coordinate_t>::max();
 
 public:
-  bool blinks(size_t Index) const {
-    return (((Blink[Index / 8] >> (Index % 8)) & 1) != 0);
+  coordinate_t StripIndex = 0;
+  std::array<RGBColor, StripSize> LEDs;
+  coordinate_t Blinking = NoBlinking;
+  RGBColor BlinkingColor;
+
+public:
+  bool blinks() const {
+    return Blinking != NoBlinking;
   }
 
-  size_t size() const { return MaxSize; }
+  bool blinks(size_t Index) const {
+    return Index == Blinking;
+  }
+
+  size_t size() const { return sizeof(RGBColor) * StripSize; }
 
 public:
-  void setBlinking(size_t Index) { Blink[Index / 8] |= 1 << (Index % 8); }
+  void setBlinking(size_t Index) {
+    Blinking = Index;
+    BlinkingColor = LEDs[Blinking];
+  }
 
-  void clearBlinking(size_t Index) { Blink[Index / 8] &= ~(1 << (Index % 8)); }
+  void clearBlinking(size_t Index) { Blinking = NoBlinking; }
 
 public:
   void dump(bool Colorful) const {
-    log("Strip %d: ", Index);
-    for (coordinate_t LEDIndex = 0; LEDIndex < MaxSize; ++LEDIndex) {
+    log("Strip %d: ", StripIndex);
+    for (coordinate_t LEDIndex = 0; LEDIndex < StripSize; ++LEDIndex) {
       bool Blinks = blinks(LEDIndex);
-      LEDs[LEDIndex].dump(Colorful, Blinks);
+      if (Blinks)
+        BlinkingColor.dump(Colorful, Blinks);
+      else
+        LEDs[LEDIndex].dump(Colorful, Blinks);
     }
   }
 };
 
-template<size_t MaxSize>
+// TODO: hardcoded and redundants
+#if 1
+using TheCoordinateSystem =
+  CoordinateSystem<4, 2,
+                   std::array<Panel, 4>{Panel{Corner::NorthWest, 1},
+                                        Panel{Corner::NorthEast, 2},
+                                        Panel{Corner::SouthWest, 0},
+                                        Panel{Corner::SouthEast, 3}},
+                   40, 12>;
+// using TheCoordinateSystem =
+//   CoordinateSystem<1, 1,
+//                    std::array<Panel, 1>{Panel{Corner::NorthWest, 0}},
+//                    40, 12>;
+// using TheCoordinateSystem =
+//   CoordinateSystem<4, 2,
+//                    std::array<Panel, 4>{Panel{Corner::NorthWest, 0},
+//                                         Panel{Corner::NorthEast, 1},
+//                                         Panel{Corner::SouthWest, 2},
+//                                         Panel{Corner::SouthEast, 3}},
+//                    40, 24>;
+// using TheCoordinateSystem =
+//   CoordinateSystem<1, 1,
+//                     std::array<Panel, 1>{Panel{Corner::NorthWest, 0}},
+//                     20, 12>;
+#else
+using TheCoordinateSystem =
+  CoordinateSystem<4, 2,
+                    std::array<Panel, 4>{Panel{Corner::NorthWest, 0},
+                                        Panel{Corner::NorthEast, 1},
+                                        Panel{Corner::SouthWest, 2},
+                                        Panel{Corner::SouthEast, 3}},
+                    40, 11>;
+#endif
+
+using ConfiguredStrip = Strip<TheCoordinateSystem::cellsPerPanel()>;
+
 struct ConstLEDRef {
-  const Strip<MaxSize> &Strip;
+  const ConfiguredStrip &Strip;
   coordinate_t Index = 0;
 
   const RGBColor &color() const { return Strip.LEDs[Index]; }
@@ -82,9 +117,8 @@ struct ConstLEDRef {
   }
 };
 
-template<size_t MaxSize>
 struct LEDRef {
-  Strip<MaxSize> &Strip;
+  ConfiguredStrip &Strip;
   coordinate_t Index = 0;
 
   RGBColor &color() const { return Strip.LEDs[Index]; }
@@ -92,47 +126,34 @@ struct LEDRef {
   void setBlinking() const { return Strip.setBlinking(Index); }
   void clearBlinking() const { return Strip.clearBlinking(Index); }
 
-  void dump() const {
-    ConstLEDRef<MaxSize>(Strip, Index).dump();
+  void dump(bool Colorful) const {
+    ConstLEDRef(Strip, Index).dump(Colorful);
   }
 
 };
 
-template <size_t MaxSize, size_t MaxPorts>
 struct LEDArray {
 public:
-  using LEDRef = LEDRef<MaxSize>;
-  using ConstLEDRef = ConstLEDRef<MaxSize>;
-
-private:
-  size_t ActualSize;
+  using LEDRef = LEDRef;
+  using ConstLEDRef = ConstLEDRef;
 
 public:
-  std::array<Strip<MaxSize>, MaxPorts> Strips;
+  std::array<ConfiguredStrip, TheCoordinateSystem::panelsCount()> Strips;
 
 public:
-  // TODO: hardcoded and redundants
-#if 1
-  using TheCoordinateSystem =
-      CoordinateSystem<2, 1,
-                       std::array<Panel, 2>{Panel{Corner::NorthWest, 0},
-                                            Panel{Corner::NorthEast, 1}},
-                       10, 4>;
-#else
-  using TheCoordinateSystem =
-      CoordinateSystem<4, 2,
-                       std::array<Panel, 4>{Panel{Corner::NorthWest, 0},
-                                            Panel{Corner::NorthEast, 1},
-                                            Panel{Corner::SouthWest, 2},
-                                            Panel{Corner::SouthEast, 3}},
-                       40, 11>;
-#endif
 
 public:
-  LEDArray() : ActualSize(MaxSize) {
-    for (coordinate_t Index = 0; Index < MaxPorts; ++Index) {
-      Strips[Index].Index = Index;
+  LEDArray() {
+    for (coordinate_t Index = 0; Index < Strips.size(); ++Index) {
+      Strips[Index].StripIndex = Index;
     }
+  }
+
+public:
+  bool blinks() const {
+    return std::any_of(Strips.begin(), Strips.end(), [] (const ConfiguredStrip &Strip) {
+      return Strip.blinks();
+    });
   }
 
 private:
@@ -143,13 +164,13 @@ private:
   }
 
   LEDRef led(size_t Column, size_t Line) {
+    assert(Column < 80);
+    assert(Line < 24);
     LEDCoordinate Coordinate =
         TheCoordinateSystem::convert(Point{Column, Line});
     return { Strips[Coordinate.StripIndex], Coordinate.LEDIndex };
   }
 
-public:
-  size_t size() const { return ActualSize; }
 
 public:
   void set(size_t Column, size_t Line, const RGBColor &Color, bool Blink) {
@@ -169,16 +190,6 @@ public:
       LED.clearBlinking();
   }
 
-  void resize(size_t NewSize) {
-    assert(NewSize <= MaxSize);
-    ActualSize = NewSize;
-    for (size_t J = 0; J < MaxPorts; J++) {
-      for (size_t I = NewSize; I < MaxSize; ++I) {
-        Strips[J].LEDs[I] = {};
-      }
-    }
-  }
-
 public:
   void render(size_t Time) {
     Trace TT(event_ids::Render);
@@ -187,26 +198,23 @@ public:
 
   template <size_t J>
   void renderImpl(size_t Time) {
-    if constexpr (J >= MaxPorts) {
+    if constexpr (J >= TheCoordinateSystem::panelsCount()) {
       return;
     } else {
       Trace TT(event_ids::RenderStrip, J);
 
-      for (size_t I = 0; I < ActualSize; ++I) {
-        RGBColor &TargetColor = Strips[J].LEDs[I];
-        HSVColor Color = TargetColor.toHSVColor();
+      if (Strips[J].blinks()) {
+        RGBColor &TargetColor = Strips[J].LEDs[Strips[J].Blinking];
+        HSVColor Color = Strips[J].BlinkingColor.toHSVColor();
 
-        if (Strips[J].blinks(I)) {
-          constexpr uint8_t MinValue = 0;
-          constexpr uint8_t MaxValue = 10;
-          size_t ScaledTime = Time / 1;
-          uint8_t ValueShift = ScaledTime % MaxValue;
-          if ((ScaledTime / MaxValue) & 1)
-            ValueShift = (MaxValue - 1) - ValueShift;
-          ValueShift += MinValue;
-          Color.Value = ValueShift;
-        }
-
+        constexpr uint8_t MinValue = 0;
+        constexpr uint8_t MaxValue = 255;
+        size_t ScaledTime = Time * 10;
+        uint8_t ValueShift = ScaledTime % MaxValue;
+        if ((ScaledTime / MaxValue) & 1)
+          ValueShift = (MaxValue - 1) - ValueShift;
+        ValueShift += MinValue;
+        Color.Value = ValueShift;
         TargetColor = Color.toRGBColor();
       }
 
@@ -219,7 +227,7 @@ public:
 public:
   void dump(bool Colorful) const {
     log("Strips:\n");
-    for (coordinate_t StripIndex = 0; StripIndex < MaxPorts; ++StripIndex) {
+    for (coordinate_t StripIndex = 0; StripIndex < TheCoordinateSystem::panelsCount(); ++StripIndex) {
       log("  Strip %d: ", StripIndex);
       Strips[StripIndex].dump(Colorful);
       log("\n");

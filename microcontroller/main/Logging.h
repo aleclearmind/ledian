@@ -15,7 +15,6 @@ template <typename... T> void log(const char *Format, T... Args) {
     return;
 
   iprintf(Format, Args...);
-  fflush(stderr);
   fflush(stdout);
 }
 
