@@ -1,0 +1,340 @@
+I (8799) Ledian: === Ledian status ===
+I (8799) Ledian: Panel 0 temperatures [°C] -> 25.0, 25.2, 25.6, 25.2
+I (8799) Ledian: Panel 1 temperatures [°C] -> 23.7, 24.7, 24.0, 23.7
+I (8809) Ledian: Panel 2 temperatures [°C] -> 23.7, 21.4, 23.7, 23.2
+I (8819) Ledian: Panel 3 temperatures [°C] -> 24.9, 25.0, 125.0, 125.0
+I (8829) Ledian: Panel 0 current [A] -> 6.324 A
+I (8829) Ledian: Panel 1 current [A] -> 6.136 A
+I (8839) Ledian: Panel 2 current [A] -> 6.075 A
+I (8839) Ledian: Panel 3 current [A] -> 0.754 A
+I (8849) Ledian: PSU 0 -> status: on
+I (8849) Ledian: PSU 0 temperature [°C] -> 25.1
+I (8859) Ledian: PSU 0 power [W] -> 149.5
+I (8859) Ledian: PSU 1 -> status: on
+I (8869) Ledian: PSU 1 temperature [°C] -> 25.0
+I (8869) Ledian: PSU 1 power [W] -> 81.9
+I (8879) Ledian: Luminosity sensor 0 [lux] -> 7.8
+I (8879) Ledian: Luminosity sensor 1 [lux] -> 7.8
+I (16889) Ledian: === Ledian status ===
+I (16889) Ledian: Panel 0 temperatures [°C] -> 25.6, 25.8, 26.2, 25.8
+I (16889) Ledian: Panel 1 temperatures [°C] -> 24.2, 25.2, 24.5, 24.3
+I (16899) Ledian: Panel 2 temperatures [°C] -> 24.3, 22.0, 24.3, 23.8
+I (16909) Ledian: Panel 3 temperatures [°C] -> 24.9, 25.0, 125.0, 125.0
+I (16919) Ledian: Panel 0 current [A] -> 6.219 A
+I (16919) Ledian: Panel 1 current [A] -> 6.108 A
+I (16929) Ledian: Panel 2 current [A] -> 6.141 A
+I (16929) Ledian: Panel 3 current [A] -> 0.698 A
+I (16939) Ledian: PSU 0 -> status: on
+I (16939) Ledian: PSU 0 temperature [°C] -> 25.3
+I (16949) Ledian: PSU 0 power [W] -> 147.9
+I (16949) Ledian: PSU 1 -> status: on
+I (16959) Ledian: PSU 1 temperature [°C] -> 25.0
+I (16959) Ledian: PSU 1 power [W] -> 82.1
+I (16969) Ledian: Luminosity sensor 0 [lux] -> 7.8
+I (16969) Ledian: Luminosity sensor 1 [lux] -> 7.8
+I (24979) Ledian: === Ledian status ===
+I (24979) Ledian: Panel 0 temperatures [°C] -> 26.2, 26.5, 26.9, 26.4
+I (24979) Ledian: Panel 1 temperatures [°C] -> 24.8, 25.8, 25.1, 24.9
+I (24989) Ledian: Panel 2 temperatures [°C] -> 25.0, 22.6, 24.9, 24.4
+I (24999) Ledian: Panel 3 temperatures [°C] -> 24.9, 25.0, 125.0, 125.0
+I (25009) Ledian: Panel 0 current [A] -> 6.175 A
+I (25009) Ledian: Panel 1 current [A] -> 6.108 A
+I (25019) Ledian: Panel 2 current [A] -> 6.125 A
+I (25019) Ledian: Panel 3 current [A] -> 0.815 A
+I (25029) Ledian: PSU 0 -> status: on
+I (25029) Ledian: PSU 0 temperature [°C] -> 25.3
+I (25039) Ledian: PSU 0 power [W] -> 147.4
+I (25039) Ledian: PSU 1 -> status: on
+I (25049) Ledian: PSU 1 temperature [°C] -> 25.1
+I (25049) Ledian: PSU 1 power [W] -> 83.3
+I (25059) Ledian: Luminosity sensor 0 [lux] -> 7.8
+I (25059) Ledian: Luminosity sensor 1 [lux] -> 7.8
+I (33069) Ledian: === Ledian status ===
+I (33069) Ledian: Panel 0 temperatures [°C] -> 26.9, 27.1, 27.5, 27.0
+I (33069) Ledian: Panel 1 temperatures [°C] -> 25.3, 26.4, 25.7, 25.4
+I (33079) Ledian: Panel 2 temperatures [°C] -> 25.6, 23.3, 25.5, 25.1
+I (33089) Ledian: Panel 3 temperatures [°C] -> 24.9, 25.1, 125.0, 125.0
+I (33099) Ledian: Panel 0 current [A] -> 6.324 A
+I (33099) Ledian: Panel 1 current [A] -> 6.114 A
+I (33109) Ledian: Panel 2 current [A] -> 6.158 A
+I (33109) Ledian: Panel 3 current [A] -> 0.737 A
+I (33119) Ledian: PSU 0 -> status: on
+I (33119) Ledian: PSU 0 temperature [°C] -> 25.5
+I (33129) Ledian: PSU 0 power [W] -> 149.3
+I (33129) Ledian: PSU 1 -> status: on
+I (33139) Ledian: PSU 1 temperature [°C] -> 25.2
+I (33139) Ledian: PSU 1 power [W] -> 82.7
+I (33149) Ledian: Luminosity sensor 0 [lux] -> 7.7
+I (33149) Ledian: Luminosity sensor 1 [lux] -> 7.7
+I (41159) Ledian: === Ledian status ===
+I (41159) Ledian: Panel 0 temperatures [°C] -> 27.4, 27.7, 28.1, 27.7
+I (41159) Ledian: Panel 1 temperatures [°C] -> 25.9, 27.0, 26.3, 26.0
+I (41169) Ledian: Panel 2 temperatures [°C] -> 26.2, 23.8, 26.1, 25.6
+I (41179) Ledian: Panel 3 temperatures [°C] -> 25.0, 25.1, 125.0, 125.0
+I (41189) Ledian: Panel 0 current [A] -> 6.313 A
+I (41189) Ledian: Panel 1 current [A] -> 6.125 A
+I (41199) Ledian: Panel 2 current [A] -> 6.125 A
+I (41199) Ledian: Panel 3 current [A] -> 0.792 A
+I (41209) Ledian: PSU 0 -> status: on
+I (41209) Ledian: PSU 0 temperature [°C] -> 25.6
+I (41219) Ledian: PSU 0 power [W] -> 149.3
+I (41219) Ledian: PSU 1 -> status: on
+I (41229) Ledian: PSU 1 temperature [°C] -> 25.3
+I (41229) Ledian: PSU 1 power [W] -> 83.0
+I (41239) Ledian: Luminosity sensor 0 [lux] -> 7.6
+I (41239) Ledian: Luminosity sensor 1 [lux] -> 7.6
+I (49249) Ledian: === Ledian status ===
+I (49249) Ledian: Panel 0 temperatures [°C] -> 28.1, 28.3, 28.7, 28.2
+I (49249) Ledian: Panel 1 temperatures [°C] -> 26.4, 27.5, 26.8, 26.5
+I (49259) Ledian: Panel 2 temperatures [°C] -> 26.8, 24.4, 26.7, 26.2
+I (49269) Ledian: Panel 3 temperatures [°C] -> 25.0, 25.1, 125.0, 125.0
+I (49279) Ledian: Panel 0 current [A] -> 6.330 A
+I (49279) Ledian: Panel 1 current [A] -> 6.114 A
+I (49289) Ledian: Panel 2 current [A] -> 6.025 A
+I (49289) Ledian: Panel 3 current [A] -> 0.681 A
+I (49299) Ledian: PSU 0 -> status: on
+I (49299) Ledian: PSU 0 temperature [°C] -> 25.8
+I (49309) Ledian: PSU 0 power [W] -> 149.3
+I (49309) Ledian: PSU 1 -> status: on
+I (49319) Ledian: PSU 1 temperature [°C] -> 25.4
+I (49319) Ledian: PSU 1 power [W] -> 80.5
+I (49329) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (49329) Ledian: Luminosity sensor 1 [lux] -> 58.3
+I (57339) Ledian: === Ledian status ===
+I (57339) Ledian: Panel 0 temperatures [°C] -> 28.6, 28.8, 29.2, 28.8
+I (57339) Ledian: Panel 1 temperatures [°C] -> 26.9, 28.0, 27.3, 27.0
+I (57349) Ledian: Panel 2 temperatures [°C] -> 27.3, 24.9, 27.3, 26.7
+I (57359) Ledian: Panel 3 temperatures [°C] -> 25.1, 25.2, 125.0, 125.0
+I (57369) Ledian: Panel 0 current [A] -> 6.186 A
+I (57369) Ledian: Panel 1 current [A] -> 6.069 A
+I (57379) Ledian: Panel 2 current [A] -> 6.080 A
+I (57379) Ledian: Panel 3 current [A] -> 0.715 A
+I (57389) Ledian: PSU 0 -> status: on
+I (57389) Ledian: PSU 0 temperature [°C] -> 26.0
+I (57399) Ledian: PSU 0 power [W] -> 147.1
+I (57399) Ledian: PSU 1 -> status: on
+I (57409) Ledian: PSU 1 temperature [°C] -> 25.5
+I (57409) Ledian: PSU 1 power [W] -> 81.5
+I (57419) Ledian: Luminosity sensor 0 [lux] -> 13.7
+I (57419) Ledian: Luminosity sensor 1 [lux] -> 6.4
+I (65429) Ledian: === Ledian status ===
+I (65429) Ledian: Panel 0 temperatures [°C] -> 29.1, 29.3, 29.8, 29.3
+I (65429) Ledian: Panel 1 temperatures [°C] -> 27.4, 28.5, 27.8, 27.5
+I (65439) Ledian: Panel 2 temperatures [°C] -> 27.9, 25.4, 27.8, 27.2
+I (65449) Ledian: Panel 3 temperatures [°C] -> 25.1, 25.3, 125.0, 125.0
+I (65459) Ledian: Panel 0 current [A] -> 6.263 A
+I (65459) Ledian: Panel 1 current [A] -> 5.986 A
+I (65469) Ledian: Panel 2 current [A] -> 6.125 A
+I (65469) Ledian: Panel 3 current [A] -> 0.681 A
+I (65479) Ledian: PSU 0 -> status: on
+I (65479) Ledian: PSU 0 temperature [°C] -> 26.1
+I (65489) Ledian: PSU 0 power [W] -> 147.0
+I (65489) Ledian: PSU 1 -> status: on
+I (65499) Ledian: PSU 1 temperature [°C] -> 25.5
+I (65499) Ledian: PSU 1 power [W] -> 81.7
+I (65509) Ledian: Luminosity sensor 0 [lux] -> 7.6
+I (65509) Ledian: Luminosity sensor 1 [lux] -> 6.4
+I (73519) Ledian: === Ledian status ===
+I (73519) Ledian: Panel 0 temperatures [°C] -> 29.6, 29.9, 30.3, 29.8
+I (73519) Ledian: Panel 1 temperatures [°C] -> 27.9, 29.0, 28.3, 28.0
+I (73529) Ledian: Panel 2 temperatures [°C] -> 28.3, 25.9, 28.3, 27.7
+I (73539) Ledian: Panel 3 temperatures [°C] -> 25.1, 25.3, 125.0, 125.0
+I (73549) Ledian: Panel 0 current [A] -> 6.252 A
+I (73549) Ledian: Panel 1 current [A] -> 6.019 A
+I (73559) Ledian: Panel 2 current [A] -> 6.136 A
+I (73559) Ledian: Panel 3 current [A] -> 0.820 A
+I (73569) Ledian: PSU 0 -> status: on
+I (73569) Ledian: PSU 0 temperature [°C] -> 26.3
+I (73579) Ledian: PSU 0 power [W] -> 147.3
+I (73579) Ledian: PSU 1 -> status: on
+I (73589) Ledian: PSU 1 temperature [°C] -> 25.7
+I (73589) Ledian: PSU 1 power [W] -> 83.5
+I (73599) Ledian: Luminosity sensor 0 [lux] -> 7.0
+I (73599) Ledian: Luminosity sensor 1 [lux] -> 9.5
+I (81609) Ledian: === Ledian status ===
+I (81609) Ledian: Panel 0 temperatures [°C] -> 30.1, 30.4, 30.8, 30.3
+I (81609) Ledian: Panel 1 temperatures [°C] -> 28.3, 29.4, 28.7, 28.5
+I (81619) Ledian: Panel 2 temperatures [°C] -> 28.8, 26.3, 28.7, 28.1
+I (81629) Ledian: Panel 3 temperatures [°C] -> 25.1, 25.4, 125.0, 125.0
+I (81639) Ledian: Panel 0 current [A] -> 6.208 A
+I (81639) Ledian: Panel 1 current [A] -> 6.130 A
+I (81649) Ledian: Panel 2 current [A] -> 6.064 A
+I (81649) Ledian: Panel 3 current [A] -> 0.754 A
+I (81659) Ledian: PSU 0 -> status: on
+I (81659) Ledian: PSU 0 temperature [°C] -> 26.5
+I (81669) Ledian: PSU 0 power [W] -> 148.1
+I (81669) Ledian: PSU 1 -> status: on
+I (81679) Ledian: PSU 1 temperature [°C] -> 25.8
+I (81679) Ledian: PSU 1 power [W] -> 81.8
+I (81689) Ledian: Luminosity sensor 0 [lux] -> 38.0
+I (81689) Ledian: Luminosity sensor 1 [lux] -> 6.4
+I (89699) Ledian: === Ledian status ===
+I (89699) Ledian: Panel 0 temperatures [°C] -> 30.5, 30.8, 31.2, 30.8
+I (89699) Ledian: Panel 1 temperatures [°C] -> 28.7, 29.9, 29.1, 28.8
+I (89709) Ledian: Panel 2 temperatures [°C] -> 29.3, 26.7, 29.2, 28.6
+I (89719) Ledian: Panel 3 temperatures [°C] -> 25.2, 25.4, 125.0, 125.0
+I (89729) Ledian: Panel 0 current [A] -> 6.286 A
+I (89729) Ledian: Panel 1 current [A] -> 6.141 A
+I (89739) Ledian: Panel 2 current [A] -> 6.058 A
+I (89739) Ledian: Panel 3 current [A] -> 0.765 A
+I (89749) Ledian: PSU 0 -> status: on
+I (89749) Ledian: PSU 0 temperature [°C] -> 26.7
+I (89759) Ledian: PSU 0 power [W] -> 149.1
+I (89759) Ledian: PSU 1 -> status: on
+I (89769) Ledian: PSU 1 temperature [°C] -> 25.8
+I (89769) Ledian: PSU 1 power [W] -> 81.9
+I (89779) Ledian: Luminosity sensor 0 [lux] -> 7.5
+I (89779) Ledian: Luminosity sensor 1 [lux] -> 7.6
+I (97789) Ledian: === Ledian status ===
+I (97789) Ledian: Panel 0 temperatures [°C] -> 31.0, 31.2, 31.7, 31.2
+I (97789) Ledian: Panel 1 temperatures [°C] -> 29.1, 30.3, 29.5, 29.2
+I (97799) Ledian: Panel 2 temperatures [°C] -> 29.7, 27.2, 29.6, 29.0
+I (97809) Ledian: Panel 3 temperatures [°C] -> 25.2, 25.4, 125.0, 125.0
+I (97819) Ledian: Panel 0 current [A] -> 6.291 A
+I (97819) Ledian: Panel 1 current [A] -> 6.069 A
+I (97829) Ledian: Panel 2 current [A] -> 5.991 A
+I (97829) Ledian: Panel 3 current [A] -> 0.720 A
+I (97839) Ledian: PSU 0 -> status: on
+I (97839) Ledian: PSU 0 temperature [°C] -> 26.9
+I (97849) Ledian: PSU 0 power [W] -> 148.3
+I (97849) Ledian: PSU 1 -> status: on
+I (97859) Ledian: PSU 1 temperature [°C] -> 26.0
+I (97859) Ledian: PSU 1 power [W] -> 80.5
+I (97869) Ledian: Luminosity sensor 0 [lux] -> 7.5
+I (97869) Ledian: Luminosity sensor 1 [lux] -> 7.6
+I (105879) Ledian: === Ledian status ===
+I (105879) Ledian: Panel 0 temperatures [°C] -> 31.4, 31.7, 32.1, 31.6
+I (105889) Ledian: Panel 1 temperatures [°C] -> 29.5, 30.6, 29.9, 29.6
+I (105889) Ledian: Panel 2 temperatures [°C] -> 30.1, 27.5, 30.1, 29.4
+I (105899) Ledian: Panel 3 temperatures [°C] -> 25.3, 25.5, 125.0, 125.0
+I (105909) Ledian: Panel 0 current [A] -> 6.213 A
+I (105909) Ledian: Panel 1 current [A] -> 6.064 A
+I (105919) Ledian: Panel 2 current [A] -> 6.152 A
+I (105919) Ledian: Panel 3 current [A] -> 0.765 A
+I (105929) Ledian: PSU 0 -> status: on
+I (105929) Ledian: PSU 0 temperature [°C] -> 27.0
+I (105939) Ledian: PSU 0 power [W] -> 147.3
+I (105939) Ledian: PSU 1 -> status: on
+I (105949) Ledian: PSU 1 temperature [°C] -> 26.0
+I (105949) Ledian: PSU 1 power [W] -> 83.0
+I (105959) Ledian: Luminosity sensor 0 [lux] -> 7.5
+I (105959) Ledian: Luminosity sensor 1 [lux] -> 7.6
+I (113969) Ledian: === Ledian status ===
+I (113969) Ledian: Panel 0 temperatures [°C] -> 31.8, 32.0, 32.5, 32.0
+I (113979) Ledian: Panel 1 temperatures [°C] -> 29.8, 31.0, 30.3, 30.0
+I (113979) Ledian: Panel 2 temperatures [°C] -> 30.5, 27.9, 30.5, 29.8
+I (113989) Ledian: Panel 3 temperatures [°C] -> 25.3, 25.6, 125.0, 125.0
+I (113999) Ledian: Panel 0 current [A] -> 6.114 A
+I (113999) Ledian: Panel 1 current [A] -> 5.958 A
+I (114009) Ledian: Panel 2 current [A] -> 5.997 A
+I (114009) Ledian: Panel 3 current [A] -> 0.770 A
+I (114019) Ledian: PSU 0 -> status: on
+I (114019) Ledian: PSU 0 temperature [°C] -> 27.2
+I (114029) Ledian: PSU 0 power [W] -> 144.9
+I (114029) Ledian: PSU 1 -> status: on
+I (114039) Ledian: PSU 1 temperature [°C] -> 26.1
+I (114039) Ledian: PSU 1 power [W] -> 81.2
+I (114049) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (114049) Ledian: Luminosity sensor 1 [lux] -> 7.5
+I (122059) Ledian: === Ledian status ===
+I (122059) Ledian: Panel 0 temperatures [°C] -> 32.1, 32.4, 32.9, 32.4
+I (122069) Ledian: Panel 1 temperatures [°C] -> 30.2, 31.4, 30.6, 30.3
+I (122069) Ledian: Panel 2 temperatures [°C] -> 30.9, 28.2, 30.8, 30.1
+I (122079) Ledian: Panel 3 temperatures [°C] -> 25.3, 25.6, 125.0, 125.0
+I (122089) Ledian: Panel 0 current [A] -> 6.302 A
+I (122089) Ledian: Panel 1 current [A] -> 6.080 A
+I (122099) Ledian: Panel 2 current [A] -> 6.008 A
+I (122099) Ledian: Panel 3 current [A] -> 0.765 A
+I (122109) Ledian: PSU 0 -> status: on
+I (122109) Ledian: PSU 0 temperature [°C] -> 27.4
+I (122119) Ledian: PSU 0 power [W] -> 148.6
+I (122119) Ledian: PSU 1 -> status: on
+I (122129) Ledian: PSU 1 temperature [°C] -> 26.2
+I (122129) Ledian: PSU 1 power [W] -> 81.3
+I (122139) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (122139) Ledian: Luminosity sensor 1 [lux] -> 7.5
+I (130149) Ledian: === Ledian status ===
+I (130149) Ledian: Panel 0 temperatures [°C] -> 32.5, 32.7, 33.3, 32.7
+I (130159) Ledian: Panel 1 temperatures [°C] -> 30.5, 31.7, 30.9, 30.6
+I (130159) Ledian: Panel 2 temperatures [°C] -> 31.2, 28.5, 31.2, 30.4
+I (130169) Ledian: Panel 3 temperatures [°C] -> 25.4, 25.7, 125.0, 125.0
+I (130179) Ledian: Panel 0 current [A] -> 6.213 A
+I (130179) Ledian: Panel 1 current [A] -> 6.014 A
+I (130189) Ledian: Panel 2 current [A] -> 6.025 A
+I (130189) Ledian: Panel 3 current [A] -> 0.787 A
+I (130199) Ledian: PSU 0 -> status: on
+I (130199) Ledian: PSU 0 temperature [°C] -> 27.6
+I (130209) Ledian: PSU 0 power [W] -> 146.7
+I (130209) Ledian: PSU 1 -> status: on
+I (130219) Ledian: PSU 1 temperature [°C] -> 26.3
+I (130219) Ledian: PSU 1 power [W] -> 81.7
+I (130229) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (130229) Ledian: Luminosity sensor 1 [lux] -> 7.5
+I (138239) Ledian: === Ledian status ===
+I (138239) Ledian: Panel 0 temperatures [°C] -> 32.8, 33.0, 33.6, 33.1
+I (138249) Ledian: Panel 1 temperatures [°C] -> 30.8, 32.0, 31.3, 30.9
+I (138249) Ledian: Panel 2 temperatures [°C] -> 31.6, 28.8, 31.5, 30.8
+I (138259) Ledian: Panel 3 temperatures [°C] -> 25.4, 25.7, 125.0, 125.0
+I (138269) Ledian: Panel 0 current [A] -> 6.136 A
+I (138269) Ledian: Panel 1 current [A] -> 6.091 A
+I (138279) Ledian: Panel 2 current [A] -> 6.102 A
+I (138279) Ledian: Panel 3 current [A] -> 0.742 A
+I (138289) Ledian: PSU 0 -> status: on
+I (138289) Ledian: PSU 0 temperature [°C] -> 27.8
+I (138299) Ledian: PSU 0 power [W] -> 146.7
+I (138299) Ledian: PSU 1 -> status: on
+I (138309) Ledian: PSU 1 temperature [°C] -> 26.4
+I (138309) Ledian: PSU 1 power [W] -> 82.1
+I (138319) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (138319) Ledian: Luminosity sensor 1 [lux] -> 7.5
+I (146329) Ledian: === Ledian status ===
+I (146329) Ledian: Panel 0 temperatures [°C] -> 33.1, 33.4, 34.0, 33.4
+I (146339) Ledian: Panel 1 temperatures [°C] -> 31.1, 32.4, 31.5, 31.2
+I (146339) Ledian: Panel 2 temperatures [°C] -> 31.9, 29.1, 31.8, 31.1
+I (146349) Ledian: Panel 3 temperatures [°C] -> 25.4, 25.8, 125.0, 125.0
+I (146359) Ledian: Panel 0 current [A] -> 6.130 A
+I (146359) Ledian: Panel 1 current [A] -> 5.997 A
+I (146369) Ledian: Panel 2 current [A] -> 5.975 A
+I (146369) Ledian: Panel 3 current [A] -> 0.787 A
+I (146379) Ledian: PSU 0 -> status: on
+I (146379) Ledian: PSU 0 temperature [°C] -> 28.0
+I (146389) Ledian: PSU 0 power [W] -> 145.5
+I (146389) Ledian: PSU 1 -> status: on
+I (146399) Ledian: PSU 1 temperature [°C] -> 26.5
+I (146399) Ledian: PSU 1 power [W] -> 81.1
+I (146409) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (146409) Ledian: Luminosity sensor 1 [lux] -> 7.4
+I (154419) Ledian: === Ledian status ===
+I (154419) Ledian: Panel 0 temperatures [°C] -> 33.4, 33.6, 34.3, 33.8
+I (154429) Ledian: Panel 1 temperatures [°C] -> 31.3, 32.7, 31.8, 31.5
+I (154429) Ledian: Panel 2 temperatures [°C] -> 32.2, 29.3, 32.2, 31.4
+I (154439) Ledian: Panel 3 temperatures [°C] -> 25.5, 25.9, 125.0, 125.0
+I (154449) Ledian: Panel 0 current [A] -> 6.224 A
+I (154449) Ledian: Panel 1 current [A] -> 5.925 A
+I (154459) Ledian: Panel 2 current [A] -> 6.069 A
+I (154459) Ledian: Panel 3 current [A] -> 0.776 A
+I (154469) Ledian: PSU 0 -> status: on
+I (154469) Ledian: PSU 0 temperature [°C] -> 28.2
+I (154479) Ledian: PSU 0 power [W] -> 145.8
+I (154479) Ledian: PSU 1 -> status: on
+I (154489) Ledian: PSU 1 temperature [°C] -> 26.6
+I (154489) Ledian: PSU 1 power [W] -> 82.1
+I (154499) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (154499) Ledian: Luminosity sensor 1 [lux] -> 7.4
+I (162509) Ledian: === Ledian status ===
+I (162509) Ledian: Panel 0 temperatures [°C] -> 33.7, 34.0, 34.6, 34.0
+I (162519) Ledian: Panel 1 temperatures [°C] -> 31.6, 32.9, 32.1, 31.7
+I (162519) Ledian: Panel 2 temperatures [°C] -> 32.5, 29.6, 32.4, 31.6
+I (162529) Ledian: Panel 3 temperatures [°C] -> 25.5, 25.9, 125.0, 125.0
+I (162539) Ledian: Panel 0 current [A] -> 6.302 A
+I (162539) Ledian: Panel 1 current [A] -> 6.036 A
+I (162549) Ledian: Panel 2 current [A] -> 6.097 A
+I (162549) Ledian: Panel 3 current [A] -> 0.715 A
+I (162559) Ledian: PSU 0 -> status: on
+I (162559) Ledian: PSU 0 temperature [°C] -> 28.4
+I (162569) Ledian: PSU 0 power [W] -> 148.1
+I (162569) Ledian: PSU 1 -> status: on
+I (162579) Ledian: PSU 1 temperature [°C] -> 26.7
+I (162579) Ledian: PSU 1 power [W] -> 81.7
+I (162589) Ledian: Luminosity sensor 0 [lux] -> 7.4
+I (162589) Ledian: Luminosity sensor 1 [lux] -> 7.4
